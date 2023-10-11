@@ -69,7 +69,7 @@ Function Get-CurrentVersion() {
 
 Function Get-LatestVersion() {
     $LatestVersionFilePath = "$PyEnvDir\latest.version"
-    (New-Object System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/.version", $LatestVersionFilePath)
+    (New-Object System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/evanatvisionsoft/pyenv-win/master/.version", $LatestVersionFilePath)
     $LatestVersion = Get-Content $LatestVersionFilePath
 
     Remove-Item -Path $LatestVersionFilePath
@@ -120,7 +120,7 @@ Function Main() {
 
     $DownloadPath = "$PyEnvDir\pyenv-win.zip"
 
-    (New-Object System.Net.WebClient).DownloadFile("https://github.com/pyenv-win/pyenv-win/archive/master.zip", $DownloadPath)
+    (New-Object System.Net.WebClient).DownloadFile("https://github.com/evanatvisionsoft/pyenv-win/archive/master.zip", $DownloadPath)
     Microsoft.PowerShell.Archive\Expand-Archive -Path $DownloadPath -DestinationPath $PyEnvDir
     Move-Item -Path "$PyEnvDir\pyenv-win-master\*" -Destination "$PyEnvDir"
     Remove-Item -Path "$PyEnvDir\pyenv-win-master" -Recurse
