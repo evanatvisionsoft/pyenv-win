@@ -33,7 +33,7 @@ Function GetCommandList()
 
     Dim file
     Dim matches
-    For Each file In objfs.GetFolder(..).Files
+    For Each file In objfs.GetFolder(strDirLibs).Files
         Set matches = fileRegex.Execute(objfs.GetFileName(file))
         If matches.Count > 0 And exts.Exists(objfs.GetExtensionName(file)) Then
             cmdList.Add matches(0).SubMatches(0), file
@@ -46,7 +46,7 @@ End Function
 Sub PrintVersion(cmd, exitCode)
     ' WScript.echo "kkotari: pyenv.vbs print version..!"
     Dim help
-    help = getCommandOutput("cmd /c """& .. &"\"& cmd &".bat""")
+    help = getCommandOutput("cmd /c """& strDirLibs &"\"& cmd &".bat""")
     WScript.Echo help
     WScript.Quit exitCode
 End Sub
@@ -54,7 +54,7 @@ End Sub
 Sub PrintHelp(cmd, exitCode)
     ' WScript.echo "kkotari: pyenv.vbs print help..!"
     Dim help
-    help = getCommandOutput("cmd /c """& .. &"\"& cmd &".bat"" --help")
+    help = getCommandOutput("cmd /c """& strDirLibs &"\"& cmd &".bat"" --help")
     WScript.Echo help
     WScript.Quit exitCode
 End Sub
@@ -71,11 +71,11 @@ Sub CommandShims(arg)
     If arg.Count < 2 Then
     ' WScript.Echo join(arg.ToArray(), ", ")
     ' if --short passed then remove /s from cmd
-        shims_files = getCommandOutput("cmd /c dir "& .. &"/s /b")
+        shims_files = getCommandOutput("cmd /c dir "& strDirShims &"/s /b")
     ElseIf arg(1) = "--short" Then
-        shims_files = getCommandOutput("cmd /c dir "& .. &" /b")
+        shims_files = getCommandOutput("cmd /c dir "& strDirShims &" /b")
     Else
-        shims_files = getCommandOutput("cmd /c "& .. &"\pyenv-shims.bat --help")
+        shims_files = getCommandOutput("cmd /c "& strDirLibs &"\pyenv-shims.bat --help")
     End IF
     WScript.Echo shims_files
 End Sub

@@ -40,6 +40,8 @@ End Sub
 SetProxy
 
 Dim strCurrent
+Dim strPyenvHomeInit
+Dim checkForParenthesis
 Dim strPyenvHome
 Dim strPyenvParent
 Dim strDirCache
@@ -50,7 +52,11 @@ Dim strDirWiX
 Dim strDBFile
 Dim strVerFile
 strCurrent   = objfs.GetAbsolutePathName(".")
-strPyenvHome = objfs.getParentFolderName(objfs.getParentFolderName(WScript.ScriptFullName))
+strPyenvHomeInit = objfs.getParentFolderName(objfs.getParentFolderName(WScript.ScriptFullName))
+WScript.Echo strPyenvHomeInit
+' checkForParenthesis = InStrRev(strPyenvHomeInit, "()") '
+strPyenvHome = Replace(strPyenvHomeInit, "()", "\(\)")
+WScript.Echo strPyenvHome
 strPyenvParent = objfs.getParentFolderName(strPyenvHome)
 strDirCache  = strPyenvHome & "\install_cache"
 strDirVers   = strPyenvHome & "\versions"
@@ -367,7 +373,7 @@ Sub WriteLinuxScript(baseName)
                 .Close
             End With
         End If
-        
+
     End If
 End Sub
 
