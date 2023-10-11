@@ -5,6 +5,7 @@
     .DESCRIPTION
     Installs pyenv-win to $HOME\.pyenv
     If pyenv-win is already installed, try to update to the latest version.
+    Modified to check for special characters in directory to prevent breakage during execution. -- Anon
 
     .PARAMETER Uninstall
     Uninstall pyenv-win. Note that this uninstalls any Python versions that were installed with pyenv-win.
@@ -21,16 +22,19 @@
     .LINK
     Online version: https://pyenv-win.github.io/pyenv-win/
 #>
-    
+
 param (
     [Switch] $Uninstall = $False
 )
-    
-$PyEnvDir = "${env:USERPROFILE}\.pyenv"
-$PyEnvWinDir = "${PyEnvDir}\pyenv-win"
-$BinPath = "${PyEnvWinDir}\bin"
-$ShimsPath = "${PyEnvWinDir}\shims"
-    
+
+$UserDir = "${env:USERPROFILE}"
+$PyEnvDir = $UserDir+'\.pyenv'
+$PyEnvWinDir = $PyEnvDir+'\pyenv-win'
+$BinPath = $PyEnvWinDir+'\bin'
+$ShimsPath = $PyEnvWinDir+'\shims'
+
+#Have to write a fix for my Userdir having special chars in it to run pyenv scripts properly
+
 Function Remove-PyEnvVars() {
     $PathParts = [System.Environment]::GetEnvironmentVariable('PATH', "User") -Split ";"
     $NewPathParts = $PathParts.Where{ $_ -ne $BinPath }.Where{ $_ -ne $ShimsPath }
@@ -74,9 +78,10 @@ Function Get-LatestVersion() {
 }
 
 Function Main() {
+    Fix-UserProfilePath
     If ($Uninstall) {
         Remove-PyEnv
-        If ($? -eq $True) {
+        If ($LastExitCode -eq 0) {
             Write-Host "pyenv-win successfully uninstalled."
         }
         Else {
@@ -86,7 +91,7 @@ Function Main() {
     }
 
     $BackupDir = "${env:Temp}/pyenv-win-backup"
-    
+
     $CurrentVersion = Get-CurrentVersion
     If ($CurrentVersion) {
         Write-Host "pyenv-win $CurrentVersion installed."
@@ -97,7 +102,7 @@ Function Main() {
         }
         Else {
             Write-Host "New version available: $LatestVersion. Updating..."
-            
+
             Write-Host "Backing up existing Python installations..."
             $FoldersToBackup = "install_cache", "versions", "shims"
             ForEach ($Dir in $FoldersToBackup) {
@@ -106,10 +111,10 @@ Function Main() {
                 }
                 Move-Item -Path "${PyEnvWinDir}/${Dir}" -Destination $BackupDir
             }
-            
+
             Write-Host "Removing $PyEnvDir..."
             Remove-Item -Path $PyEnvDir -Recurse
-        }   
+        }
     }
 
     New-Item -Path $PyEnvDir -ItemType Directory
@@ -139,8 +144,8 @@ Function Main() {
         Write-Host "Restoring Python installations..."
         Move-Item -Path "$BackupDir/*" -Destination $PyEnvWinDir
     }
-    
-    If ($? -eq $True) {
+
+    If ($LastExitCode -eq 0) {
         Write-Host "pyenv-win is successfully installed. You may need to close and reopen your terminal before using it."
     }
     Else {
