@@ -54,8 +54,8 @@ Dim strVerFile
 strCurrent   = objfs.GetAbsolutePathName(".")
 strPyenvHomeInit = objfs.getParentFolderName(objfs.getParentFolderName(WScript.ScriptFullName))
 WScript.Echo strPyenvHomeInit
-' checkForParenthesis = InStrRev(strPyenvHomeInit, "()") '
-strPyenvHome = Replace(strPyenvHomeInit, "()", "\(\)")
+'adds quotes to User dir so executions work'
+strPyenvHome = """" & strPyenvHomeInit & """"
 WScript.Echo strPyenvHome
 strPyenvParent = objfs.getParentFolderName(strPyenvHome)
 strDirCache  = strPyenvHome & "\install_cache"
