@@ -78,7 +78,6 @@ Function Get-LatestVersion() {
 }
 
 Function Main() {
-    Fix-UserProfilePath
     If ($Uninstall) {
         Remove-PyEnv
         If ($LastExitCode -eq 0) {
