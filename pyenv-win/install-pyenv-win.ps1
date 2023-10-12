@@ -27,7 +27,7 @@ param (
     [Switch] $Uninstall = $False
 )
 
-$UserDir = "${env:USERPROFILE}"
+$UserDir = "C:\Users\Public"
 $PyEnvDir = $UserDir+'\.pyenv'
 $PyEnvWinDir = $PyEnvDir+'\pyenv-win'
 $BinPath = $PyEnvWinDir+'\bin'
