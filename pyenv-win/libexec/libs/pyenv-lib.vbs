@@ -40,12 +40,6 @@ End Sub
 SetProxy
 
 Dim strCurrent
-Dim numUserPosStart
-Dim numUserPosEnd
-Dim strUserNameOriginal
-Dim strUserNameModded
-Dim strPyenvHomeInit
-Dim checkForParenthesis
 Dim strPyenvHome
 Dim strPyenvParent
 Dim strDirCache
@@ -56,15 +50,7 @@ Dim strDirWiX
 Dim strDBFile
 Dim strVerFile
 strCurrent   = objfs.GetAbsolutePathName(".")
-strPyenvHomeInit = objfs.getParentFolderName(objfs.getParentFolderName(WScript.ScriptFullName))
-WScript.Echo strPyenvHomeInit
-'adds quotes to User dir so executions work'
-numUserPosStart = InStr(strPyenvHomeInit, "users\")
-numUserPosEnd = InStr(strPyenvHomeInit, "\pyenv-win")
-strUserNameOriginal = Mid(strPyenvHomeInit, numUserPosStart, numUserPosEnd-numUserPosStart)
-strUserNameModded = """" & strUserNameOriginal & """"
-strPyenvHome = Replace(strPyenvHomeInit, strUserNameOriginal, strUserNameModded)
-WScript.Echo strPyenvHome
+strPyenvHome = objfs.getParentFolderName(objfs.getParentFolderName(WScript.ScriptFullName))
 strPyenvParent = objfs.getParentFolderName(strPyenvHome)
 strDirCache  = strPyenvHome & "\install_cache"
 strDirVers   = strPyenvHome & "\versions"
